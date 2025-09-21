@@ -1369,11 +1369,11 @@
             <div class="radio-group">
               <label class="radio-option">
                 <span>Latest</span>
-                <input type="radio" name="popularity-sort" value="latest" checked>
+                <input type="radio" name="popularity-sort" value="latest">
               </label>
               <label class="radio-option">
                 <span>Most Liked</span>
-                <input type="radio" name="popularity-sort" value="likes">
+                <input type="radio" name="popularity-sort" value="likes" checked>
               </label>
               <label class="radio-option">
                 <span>Most Retweeted</span>
@@ -1436,7 +1436,7 @@
     let highlights = [];
     let mediaTweets = [];
     let filteredTweets = [];
-    let currentSort = 'latest';
+    let currentSort = 'likes';
     let searchQuery = '';
     let isIndividualView = false;
     let currentTab = 'posts';
@@ -2897,7 +2897,7 @@
       // Reset all filters to defaults
       showFilter = 'all';
       dateSort = 'newest';
-      currentSort = 'latest';
+      currentSort = 'likes';
       dateFrom = null;
       dateTo = null;
       searchQuery = '';
@@ -2905,7 +2905,7 @@
       // Reset UI
       document.querySelector('input[name="show-filter"][value="all"]').checked = true;
       document.querySelector('input[name="date-sort"][value="newest"]').checked = true;
-      document.querySelector('input[name="popularity-sort"][value="latest"]').checked = true;
+      document.querySelector('input[name="popularity-sort"][value="likes"]').checked = true;
       document.getElementById('searchBox').value = '';
 
       currentPage = 1;
@@ -2959,7 +2959,7 @@
           // Restore filter values
           showFilter = settings.showFilter || 'all';
           dateSort = settings.dateSort || 'newest';
-          currentSort = settings.currentSort || 'latest';
+          currentSort = settings.currentSort || 'likes';
           dateFrom = settings.dateFrom || null;
           dateTo = settings.dateTo || null;
           searchQuery = settings.searchQuery || '';
