@@ -313,6 +313,7 @@
       flex-direction: column;
       gap: 4px;
       flex: 1;
+      min-width: 0;
     }
 
     .date-input {
@@ -322,6 +323,10 @@
       padding: 8px 12px;
       color: #f7f9f9;
       font-size: 14px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
     }
 
     .date-input:focus {
