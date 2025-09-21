@@ -31,7 +31,7 @@ Your Twitter archive should look like this:
 
 ```
 twitter-archive/
-├── index.html          # This file
+├── index.html <- Add this to the root of your archive
 ├── data/
 │   ├── account.js
 │   ├── tweets.js
