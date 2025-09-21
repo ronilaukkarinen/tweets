@@ -23,7 +23,7 @@ A modern, responsive interface for viewing your Twitter archive data locally. Th
 2. **Extract the archive** to a folder on your computer
 3. **Download `index.html`** from this repository
 4. **Place `index.html`** in the root of your extracted Twitter archive folder (same level as the `data` folder)
-5. **Open `index.html`** in your web browser or publish it online on your web server
+5. **Open `index.html`** in your web browser
 
 ## Folder structure
 
