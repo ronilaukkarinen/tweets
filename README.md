@@ -85,21 +85,6 @@ After running the script:
    - Your own web server
    - Any static hosting service
 
-### Example hosting on GitHub Pages
-
-```bash
-# Upload the public-twitter-archive folder to GitHub
-cd public-twitter-archive
-git init
-git add .
-git commit -m "Add Twitter archive"
-git remote add origin https://github.com/yourusername/my-tweets
-git push -u origin main
-
-# Enable GitHub Pages in repository settings
-# Your archive will be live at: https://yourusername.github.io/my-tweets
-```
-
 ## Disclaimer
 
 This tool is not affiliated with Twitter/X. It's designed to work with Twitter archive data as provided by Twitter's official export feature.
