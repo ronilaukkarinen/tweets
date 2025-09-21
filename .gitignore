@@ -1,0 +1,87 @@
+Your archive.html
+assets/
+public-twitter-archive/
+
+# Twitter backup data files
+data/
+*.js
+
+# Personal information
+account.js
+profile.js
+personalization.js
+ad-engagements.js
+ad-impressions.js
+ad-mobile-conversions-attributed.js
+ad-mobile-conversions-unattributed.js
+ad-online-conversions-attributed.js
+ad-online-conversions-unattributed.js
+ageinfo.js
+app.js
+block.js
+branch-links.js
+catalog-item.js
+community-tweet.js
+connected-application.js
+contact.js
+device-token.js
+direct-messages.js
+direct-messages-group.js
+direct-messages-media.js
+email-address-change.js
+fleet.js
+follower.js
+following.js
+ip-audit.js
+like.js
+lists-created.js
+lists-member.js
+lists-subscribed.js
+moment.js
+mute.js
+ni-devices.js
+periscope-account-information.js
+periscope-ban-information.js
+periscope-broadcast-metadata.js
+periscope-comments-made-by-user.js
+periscope-expired-broadcasts.js
+periscope-followers.js
+periscope-profile-description.js
+phone-number.js
+professional-data.js
+protected-history.js
+reply.js
+saved-search.js
+screen-name-change.js
+shopify-account.js
+spaces-metadata.js
+sso.js
+tweet.js
+tweets.js
+tweets-part*.js
+user-link-clicks.js
+verified.js
+
+# Media files
+tweets_media/
+profile_media/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+*.tmp
+*.temp
