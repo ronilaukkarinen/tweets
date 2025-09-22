@@ -1,5 +1,9 @@
 # 🐦 tweets - Yet another Twitter archive viewer
 
+[![version](https://img.shields.io/badge/version-1.0.0-blue.svg?style=for-the-badge)](#)
+[![javascript](https://img.shields.io/badge/javascript-%23F7DF1E.svg?style=for-the-badge&logo=javascript&logoColor=black)](#)
+[![html5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)](#)
+
 A modern, responsive interface for viewing your Twitter archive data locally. This tool transforms your downloaded Twitter data into an elegant, Twitter-like interface that you can browse offline - with **minimal** effort!
 
 **The goal: Single index.html file with JS, CSS and HTML - No compiling, no frameworks, no dependencies.**
