@@ -2258,8 +2258,11 @@
         tweetText = tweetText.replace(/https?:\/\/t\.co\/[a-zA-Z0-9]+/g, '');
       }
 
-      // Clean up multiple spaces and trim
-      tweetText = tweetText.replace(/\s+/g, ' ').trim();
+      // Clean up multiple consecutive spaces but preserve line breaks
+      tweetText = tweetText.replace(/[ \t]+/g, ' ').trim();
+
+      // Convert newlines to HTML line breaks for display
+      tweetText = tweetText.replace(/\n/g, '<br>');
 
       // Handle retweets - improved approach
       let retweetIndicator = '';
@@ -2338,7 +2341,7 @@
             });
           }
 
-          // Remove trailing whitespace and multiple spaces
+          // Remove trailing whitespace and multiple spaces but preserve line breaks
           cleanText = cleanText.replace(/[ \t]+/g, ' ').trim();
 
           // If there's no meaningful content after cleanup, check if we should show deleted banner
@@ -2667,8 +2670,11 @@
         tweetText = tweetText.replace(/https?:\/\/t\.co\/[a-zA-Z0-9]+/g, '');
       }
 
-      // Clean up multiple spaces and trim
-      tweetText = tweetText.replace(/\s+/g, ' ').trim();
+      // Clean up multiple consecutive spaces but preserve line breaks
+      tweetText = tweetText.replace(/[ \t]+/g, ' ').trim();
+
+      // Convert newlines to HTML line breaks for display
+      tweetText = tweetText.replace(/\n/g, '<br>');
 
       // Handle retweets for individual tweet view - simplified since we redirect to original when possible
       let retweetIndicator = '';
