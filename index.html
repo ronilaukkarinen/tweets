@@ -2325,24 +2325,74 @@
           // Clean up the tweet text for retweets - don't truncate, show full text
           let cleanText = tweet.full_text.replace(/^RT @\w+:\s*/, '').trim();
 
-          // Remove t.co URLs when we have media displayed (they're redundant)
+          // Process URLs in retweets - same logic as regular tweets
           if (tweet.entities && tweet.entities.urls) {
             tweet.entities.urls.forEach(url => {
-              if (url.url.includes('t.co')) {
-                // Remove t.co URLs that point to media or the same tweet
-                if (url.expanded_url && (url.expanded_url.includes('/status/') || url.expanded_url.includes('/photo/'))) {
-                  cleanText = cleanText.replace(url.url, '').trim();
+              // Check if this URL is a media/photo URL or points to the same tweet
+              const isMediaUrl = url.expanded_url && (
+                url.expanded_url.includes('/photo/') ||
+                url.expanded_url.includes('/video/') ||
+                (url.expanded_url.includes('/status/') && url.expanded_url.includes(tweet.id_str))
+              );
+
+              // Only hide t.co URLs when they point to media or the same tweet
+              if (url.url.includes('t.co') && isMediaUrl) {
+                cleanText = cleanText.replace(url.url, '');
+                return;
+              }
+
+              // Check if this is a t.co URL that redirects to a Twitter status
+              if (url.expanded_url && url.expanded_url.includes('/status/')) {
+                const statusMatch = url.expanded_url.match(/\/status\/(\d+)/);
+                if (statusMatch) {
+                  // Remove quoted tweet URLs since they're not accessible
+                  cleanText = cleanText.replace(url.url, '');
+                } else {
+                  cleanText = cleanText.replace(url.url,
+                    `<a href="${url.expanded_url}" class="tweet-link" target="_blank">${url.display_url}</a>`
+                  );
                 }
-                // Also remove t.co URLs when we have accessible media (they're usually redundant)
-                else if (hasAccessibleMedia) {
-                  cleanText = cleanText.replace(url.url, '').trim();
+              } else {
+                // Show all external URLs as regular links (non-Twitter URLs)
+                if (url.expanded_url && !url.expanded_url.includes('twitter.com/') && !url.expanded_url.includes('t.co/')) {
+                  cleanText = cleanText.replace(url.url,
+                    `<a href="${url.expanded_url}" class="tweet-link" target="_blank" onclick="event.stopPropagation()">${url.display_url}</a>`
+                  );
+                } else {
+                  // Remove Twitter-internal URLs
+                  cleanText = cleanText.replace(url.url, '');
                 }
               }
             });
           }
 
+          // Final cleanup for retweets: Handle any remaining t.co URLs
+          if (tweet.entities && tweet.entities.urls) {
+            cleanText = cleanText.replace(/https?:\/\/t\.co\/[a-zA-Z0-9]+/g, (match) => {
+              const correspondingUrl = tweet.entities.urls.find(url => url.url === match);
+              if (correspondingUrl && correspondingUrl.expanded_url) {
+                // Don't show if it points to the same tweet, media, or any Twitter status
+                const pointsToSameTweet = correspondingUrl.expanded_url.includes('/status/') && correspondingUrl.expanded_url.includes(tweet.id_str);
+                const pointsToMedia = correspondingUrl.expanded_url.includes('/photo/') || correspondingUrl.expanded_url.includes('/video/');
+                const pointsToTwitterStatus = correspondingUrl.expanded_url.includes('/status/');
+                if (pointsToSameTweet || pointsToMedia || pointsToTwitterStatus) {
+                  return ''; // Remove it
+                }
+                // It's an external link, show it with the display URL
+                return `<a href="${correspondingUrl.expanded_url}" class="tweet-link" target="_blank" onclick="event.stopPropagation()">${correspondingUrl.display_url || correspondingUrl.expanded_url}</a>`;
+              }
+              return ''; // Remove t.co URLs that don't have expanded URL info
+            });
+          } else {
+            // If no URL entities, remove all t.co URLs
+            cleanText = cleanText.replace(/https?:\/\/t\.co\/[a-zA-Z0-9]+/g, '');
+          }
+
           // Remove trailing whitespace and multiple spaces but preserve line breaks
           cleanText = cleanText.replace(/[ \t]+/g, ' ').trim();
+
+          // Convert newlines to HTML line breaks for display
+          cleanText = cleanText.replace(/\n/g, '<br>');
 
           // If there's no meaningful content after cleanup, check if we should show deleted banner
           if (!cleanText || cleanText.length === 0) {
@@ -2703,14 +2753,71 @@
         // Clean up the tweet text for retweets without originals
         let cleanText = tweet.full_text.replace(/^RT @\w+:\s*/, '').trim();
 
-        // Remove t.co URLs since they just point to the original tweet
+        // Process URLs in retweets - same logic as regular tweets
         if (tweet.entities && tweet.entities.urls) {
           tweet.entities.urls.forEach(url => {
-            if (url.url.includes('t.co')) {
-              cleanText = cleanText.replace(url.url, '').trim();
+            // Check if this URL is a media/photo URL or points to the same tweet
+            const isMediaUrl = url.expanded_url && (
+              url.expanded_url.includes('/photo/') ||
+              url.expanded_url.includes('/video/') ||
+              (url.expanded_url.includes('/status/') && url.expanded_url.includes(tweet.id_str))
+            );
+
+            // Only hide t.co URLs when they point to media or the same tweet
+            if (url.url.includes('t.co') && isMediaUrl) {
+              cleanText = cleanText.replace(url.url, '');
+              return;
+            }
+
+            // Check if this is a t.co URL that redirects to a Twitter status
+            if (url.expanded_url && url.expanded_url.includes('/status/')) {
+              const statusMatch = url.expanded_url.match(/\/status\/(\d+)/);
+              if (statusMatch) {
+                // Remove quoted tweet URLs since they're not accessible
+                cleanText = cleanText.replace(url.url, '');
+              } else {
+                cleanText = cleanText.replace(url.url,
+                  `<a href="${url.expanded_url}" class="tweet-link" target="_blank">${url.display_url}</a>`
+                );
+              }
+            } else {
+              // Show all external URLs as regular links (non-Twitter URLs)
+              if (url.expanded_url && !url.expanded_url.includes('twitter.com/') && !url.expanded_url.includes('t.co/')) {
+                cleanText = cleanText.replace(url.url,
+                  `<a href="${url.expanded_url}" class="tweet-link" target="_blank" onclick="event.stopPropagation()">${url.display_url}</a>`
+                );
+              } else {
+                // Remove Twitter-internal URLs
+                cleanText = cleanText.replace(url.url, '');
+              }
             }
           });
         }
+
+        // Final cleanup for retweets: Handle any remaining t.co URLs
+        if (tweet.entities && tweet.entities.urls) {
+          cleanText = cleanText.replace(/https?:\/\/t\.co\/[a-zA-Z0-9]+/g, (match) => {
+            const correspondingUrl = tweet.entities.urls.find(url => url.url === match);
+            if (correspondingUrl && correspondingUrl.expanded_url) {
+              // Don't show if it points to the same tweet, media, or any Twitter status
+              const pointsToSameTweet = correspondingUrl.expanded_url.includes('/status/') && correspondingUrl.expanded_url.includes(tweet.id_str);
+              const pointsToMedia = correspondingUrl.expanded_url.includes('/photo/') || correspondingUrl.expanded_url.includes('/video/');
+              const pointsToTwitterStatus = correspondingUrl.expanded_url.includes('/status/');
+              if (pointsToSameTweet || pointsToMedia || pointsToTwitterStatus) {
+                return ''; // Remove it
+              }
+              // It's an external link, show it with the display URL
+              return `<a href="${correspondingUrl.expanded_url}" class="tweet-link" target="_blank" onclick="event.stopPropagation()">${correspondingUrl.display_url || correspondingUrl.expanded_url}</a>`;
+            }
+            return ''; // Remove t.co URLs that don't have expanded URL info
+          });
+        } else {
+          // If no URL entities, remove all t.co URLs
+          cleanText = cleanText.replace(/https?:\/\/t\.co\/[a-zA-Z0-9]+/g, '');
+        }
+
+        // Convert newlines to HTML line breaks for display
+        cleanText = cleanText.replace(/\n/g, '<br>');
 
         // If there's no meaningful content after cleanup, check if we should show deleted banner
         if (!cleanText || cleanText.length === 0) {
